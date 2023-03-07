@@ -8,7 +8,7 @@
 
     <!-- font awesome cdn link  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <!-- custom css file link  -->
     <link rel="stylesheet" href="css/style.css">
 
@@ -219,11 +219,24 @@
     <h1 class="heading"> jadwal <span>Dokter</span> </h1>
 
     <div class="box-container">
+        <?php 
+            include 'admin/database/koneksi.php';
 
+            $query = "SELECT * FROM `jadwal`";
+
+            $result = mysqli_query($conn, $query);
+
+            if(mysqli_num_rows($result) > 0):
+            while($row = mysqli_fetch_assoc($result)):
+        ?>
         <div class="box">
             <img src="image/doc-1.jpg" alt="">
-            <h3>john deo</h3>
-            <span>expert doctor</span>
+            <h3><?= $row['nama_dokter'] ?></h3>
+            <span><?= $row['pelayanan'] ?></span>
+            <?php $masuk = date_create($row['jadwal_masuk']); ?>
+            <?php $pulang = date_create($row['jadwal_pulang']); ?>
+            <h4><?= date_format($masuk, 'l, d-m-Y') ?></h4>
+            <h5><?= date_format($masuk, 'H:i') ?> WIB - <?= date_format($pulang, 'H:i') ?> WIB</h5>
             <div class="share">
                 <a href="https://facebook.com/freewebsitecode/" class="fab fa-facebook-f"></a>
                 <a href="https://www.youtube.com/channel/UC9HlQRmKgG3jeVD_fBxj1Pw/videos" class="fab fa-youtube"></a>
@@ -232,71 +245,18 @@
                 <a href="https://freewebsitecode.com" class="fab fa-linkedin"></a>
             </div>
         </div>
-
-        <div class="box">
-            <img src="image/doc-2.jpg" alt="">
-            <h3>john deo</h3>
-            <span>expert doctor</span>
-            <div class="share">
-                <a href="https://facebook.com/freewebsitecode/" class="fab fa-facebook-f"></a>
-                <a href="https://www.youtube.com/channel/UC9HlQRmKgG3jeVD_fBxj1Pw/videos" class="fab fa-youtube"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-twitter"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-instagram"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-linkedin"></a>
-            </div>
-        </div>
-
-        <div class="box">
-            <img src="image/doc-3.jpg" alt="">
-            <h3>john deo</h3>
-            <span>expert doctor</span>
-            <div class="share">
-                <a href="https://facebook.com/freewebsitecode/" class="fab fa-facebook-f"></a>
-                <a href="https://www.youtube.com/channel/UC9HlQRmKgG3jeVD_fBxj1Pw/videos" class="fab fa-youtube"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-twitter"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-instagram"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-linkedin"></a>
-            </div>
-        </div>
-
-        <div class="box">
-            <img src="image/doc-4.jpg" alt="">
-            <h3>john deo</h3>
-            <span>expert doctor</span>
-            <div class="share">
-                <a href="https://facebook.com/freewebsitecode/" class="fab fa-facebook-f"></a>
-                <a href="https://www.youtube.com/channel/UC9HlQRmKgG3jeVD_fBxj1Pw/videos" class="fab fa-youtube"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-twitter"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-instagram"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-linkedin"></a>
-            </div>
-        </div>
-
-        <div class="box">
-            <img src="image/doc-5.jpg" alt="">
-            <h3>john deo</h3>
-            <span>expert doctor</span>
-            <div class="share">
-                <a href="https://facebook.com/freewebsitecode/" class="fab fa-facebook-f"></a>
-                <a href="https://www.youtube.com/channel/UC9HlQRmKgG3jeVD_fBxj1Pw/videos" class="fab fa-youtube"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-twitter"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-instagram"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-linkedin"></a>
-            </div>
-        </div>
-
-        <div class="box">
-            <img src="image/doc-6.jpg" alt="">
-            <h3>john deo</h3>
-            <span>expert doctor</span>
-            <div class="share">
-                <a href="https://facebook.com/freewebsitecode/" class="fab fa-facebook-f"></a>
-                <a href="https://www.youtube.com/channel/UC9HlQRmKgG3jeVD_fBxj1Pw/videos" class="fab fa-youtube"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-twitter"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-instagram"></a>
-                <a href="https://freewebsitecode.com" class="fab fa-linkedin"></a>
-            </div>
-        </div>
+        <?php
+        endwhile;
+            else:
+                ?>
+                 <div class="box">
+                <div class="content">
+                    <h4>Belum ada Jadwal Dokter diterbitkan.</h4>
+                </div>
+                </div>
+                <?php
+            endif;
+        ?>
 
     </div>
 
@@ -391,52 +351,41 @@
     <h1 class="heading"> Berita <span>Terkini</span> </h1>
 
     <div class="box-container">
+        <?php 
+            include 'admin/database/koneksi.php';
 
+            $query = "SELECT * FROM `berita`";
+
+            $result = mysqli_query($conn, $query);
+            if(mysqli_num_rows($result) > 0):
+            while($row = mysqli_fetch_assoc($result)):
+        ?>
         <div class="box">
             <div class="image">
                 <img src="image/blog-1.jpg" alt="">
             </div>
             <div class="content">
                 <div class="icon">
-                    <a href="#"> <i class="fas fa-calendar"></i> 1st may, 2021 </a>
+                    <a href="#"> <i class="fas fa-calendar"></i> <?= $row['created_at'] ?> </a>
                     <a href="#"> <i class="fas fa-user"></i> by admin </a>
                 </div>
-                <h3>blog title goes here</h3>
-                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Provident, eius.</p>
+                <h3><?= $row['judul'] ?></h3>
+                <p><?= $row['isi'] ?></p>
                 <a href="#" class="btn"> learn more <span class="fas fa-chevron-right"></span> </a>
             </div>
         </div>
-
-        <div class="box">
-            <div class="image">
-                <img src="image/blog-2.jpg" alt="">
-            </div>
-            <div class="content">
-                <div class="icon">
-                    <a href="#"> <i class="fas fa-calendar"></i> 1st may, 2021 </a>
-                    <a href="#"> <i class="fas fa-user"></i> by admin </a>
+        <?php 
+        endwhile;
+        else : 
+            ?>
+            <div class="box">
+                <div class="content">
+                    <h4>Belum ada Berita diterbitkan.</h4>
                 </div>
-                <h3>blog title goes here</h3>
-                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Provident, eius.</p>
-                <a href="#" class="btn"> learn more <span class="fas fa-chevron-right"></span> </a>
-            </div>
-        </div>
-
-        <div class="box">
-            <div class="image">
-                <img src="image/blog-3.jpg" alt="">
-            </div>
-            <div class="content">
-                <div class="icon">
-                    <a href="#"> <i class="fas fa-calendar"></i> 1st may, 2021 </a>
-                    <a href="#"> <i class="fas fa-user"></i> by admin </a>
                 </div>
-                <h3>blog title goes here</h3>
-                <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Provident, eius.</p>
-                <a href="#" class="btn"> learn more <span class="fas fa-chevron-right"></span> </a>
-            </div>
-        </div>
-
+                <?php
+        endif;
+        ?>
     </div>
 
 </section>
