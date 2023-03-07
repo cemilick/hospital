@@ -20,6 +20,8 @@
     if($success){
         header('location: /hospital_website/admin/');
     } else {
+        $_SESSION['message'] = 'Gagal Login, Pastikan Username dan Password benar!';
+        $_SESSION['type'] = 'danger';
         header('location: /hospital_website/admin/pages/login/');
     }
 ?>

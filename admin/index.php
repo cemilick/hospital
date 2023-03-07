@@ -198,9 +198,7 @@
                             <div class="col-12 grid-margin stretch-card">
                               <div class="card card-rounded">
                                 <div class="card-body">
-                                  <div
-                                    class="d-sm-flex justify-content-between align-items-start"
-                                  >
+                                  <div class="d-sm-flex justify-content-between align-items-start">
                                     <div>
                                       <h4 class="card-title card-title-dash">
                                         Jadwal Operasional Dokter
@@ -287,12 +285,17 @@
                                 <div class="card-body">
                                   <div class="row">
                                     <div class="col-lg-12">
-                                      <div
-                                        class="d-flex justify-content-between align-items-center"
-                                      >
-                                        <h4 class="card-title card-title-dash">
-                                          Daftar Berita Terkini
-                                        </h4>
+                                    <div class="d-sm-flex justify-content-between align-items-start">
+                                        <div>
+                                          <h4 class="card-title card-title-dash">
+                                            Daftar Berita Terkini
+                                          </h4>
+                                          <p
+                                            class="card-subtitle card-subtitle-dash"
+                                          >
+                                          Berita terbaru yang sudah diterbitkan.
+                                          </p>
+                                        </div>
                                       </div>
                                       <div class="list-wrapper">
                                         <ul class="todo-list todo-list-rounded">
@@ -330,9 +333,11 @@
                         else :
                         ?>
                         <li class="d-block">
-                          <div class="col-md-12 alert alert-info">
-                            Belum ada Berita terkini.
-                          </div>
+                        <div class="col-md-12 grid-margin stretch-card ">
+                                  <div class="card alert alert-info mt-3">
+                                    Belum ada Berita yang diterbitkan.
+                                  </div>
+                                </div>
                         </li>
                         <?php endif; ?>
                                           
