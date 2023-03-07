@@ -1,4 +1,11 @@
-<!DOCTYPE html>
+<?php 
+  include './database/koneksi.php';
+  session_start();
+  if(!$_SESSION['isLogin']){
+    header('location: /hospital_website/admin/pages/login');
+  }
+?>
+
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -7,7 +14,7 @@
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <title>Star Admin2</title>
+    <title>Admin RS Brayat Minulya</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="../../vendors/feather/feather.css" />
     <link
@@ -51,21 +58,22 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form class="forms-sample">
+            <form id="formBerita" class="forms-sample" action="/hospital_website/admin/pages/berita/add.php" method="POST">
               <div class="modal-body">
                 <div class="form-group">
                   <label for="exampleInputUsername1">Judul Artikel</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="exampleInputUsername1"
+                    id="judul"
                     placeholder="Username"
+                    name="judul"
                   />
                 </div>
                 <div class="form-group">
                   <label for="exampleInputEmail1">Isi Artikel</label>
                   <textarea
-                    name=""
+                    name="isi"
                     id="editor"
                     cols="30"
                     rows="10"
@@ -75,7 +83,7 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btnForm">
+                <button type="submit" class="btn btn-primary" id="btnForm">
                   Simpan
                 </button>
                 <button
@@ -96,7 +104,7 @@
       >
         <div
           class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start"
-        >
+          >
           <div class="me-3">
             <button
               class="navbar-toggler navbar-toggler align-self-center"
@@ -248,152 +256,56 @@
                       class="btn btn-primary"
                       data-toggle="modal"
                       data-target="#beritaModal"
+                      onclick="editButton(null)"
                     >
                       Tambah Berita Baru
                     </button>
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-md-6 grid-margin stretch-card">
-                    <div class="card">
-                      <div class="card-body">
-                        <h4 class="card-title">
-                          Viral! Praktik Dokter Ilegal!
-                        </h4>
-                        <p class="card-description">Admin, 24 June 2020</p>
-                        <div class="template-demo">
-                          <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Quia placeat, minus fugiat suscipit nemo
-                            repellendus. Harum expedita tempora ducimus,
-                            pariatur dolorem, nostrum dolorum soluta voluptas
-                            dolores odio at debitis temporibus.
-                          </p>
-                        </div>
-                        <hr />
-                        <div class="d-flex justify-content-end">
-                          <a href=""
-                            ><button
-                              class="btn btn-sm btn-warning"
-                              style="margin-right: 10px"
-                            >
-                              Edit
-                            </button></a
-                          >
-                          <a href=""
-                            ><button class="btn btn-sm btn-danger">
-                              Delete
-                            </button></a
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="col-md-6 grid-margin stretch-card">
-                    <div class="card">
-                      <div class="card-body">
-                        <h4 class="card-title">
-                          Viral! Praktik Dokter Ilegal!
-                        </h4>
-                        <p class="card-description">Admin, 24 June 2020</p>
-                        <div class="template-demo">
-                          <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Quia placeat, minus fugiat suscipit nemo
-                            repellendus. Harum expedita tempora ducimus,
-                            pariatur dolorem, nostrum dolorum soluta voluptas
-                            dolores odio at debitis temporibus.
-                          </p>
-                        </div>
-                        <hr />
-                        <div class="d-flex justify-content-end">
-                          <a href=""
-                            ><button
-                              class="btn btn-sm btn-warning"
-                              style="margin-right: 10px"
-                            >
-                              Edit
-                            </button></a
-                          >
-                          <a href=""
-                            ><button class="btn btn-sm btn-danger">
-                              Delete
-                            </button></a
-                          >
+                  <?php 
+                    $query = "SELECT * FROM `berita`";
+                    $result = mysqli_query($conn, $query);
+
+                    if(mysqli_num_rows($result) > 0):
+                      while($row = mysqli_fetch_assoc($result)):
+                        ?>
+                        <div class="col-md-6 grid-margin stretch-card">
+                      <div class="card">
+                        <div class="card-body">
+                          <h4 class="card-title" id="judul<?= $row['id'] ?>"><?= $row['judul']; ?></h4>
+                          <p class="card-description">Admin, <?= $row['created_at'];  ?></p>
+                          <div class="template-demo">
+                            <p id="isi<?= $row['id'] ?>"><?= $row['isi']; ?></p>
+                          </div>
+                          <hr />
+                          <div class="d-flex justify-content-end">
+                            <button
+                                class="btn btn-sm btn-warning"
+                                style="margin-right: 10px"
+                                onclick="editButton(<?= $row['id'] ?>)"
+                                data-toggle="modal"
+                                data-target="#beritaModal"
+                              >
+                                Edit
+                              </button>
+                              <button class="btn btn-sm btn-danger" onclick="alertDelete(<?= $row['id'] ?>)">
+                                Delete
+                              </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="col-md-6 grid-margin stretch-card">
-                    <div class="card">
-                      <div class="card-body">
-                        <h4 class="card-title">
-                          Viral! Praktik Dokter Ilegal!
-                        </h4>
-                        <p class="card-description">Admin, 24 June 2020</p>
-                        <div class="template-demo">
-                          <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Quia placeat, minus fugiat suscipit nemo
-                            repellendus. Harum expedita tempora ducimus,
-                            pariatur dolorem, nostrum dolorum soluta voluptas
-                            dolores odio at debitis temporibus.
-                          </p>
-                        </div>
-                        <hr />
-                        <div class="d-flex justify-content-end">
-                          <a href=""
-                            ><button
-                              class="btn btn-sm btn-warning"
-                              style="margin-right: 10px"
-                            >
-                              Edit
-                            </button></a
-                          >
-                          <a href=""
-                            ><button class="btn btn-sm btn-danger">
-                              Delete
-                            </button></a
-                          >
-                        </div>
+                      <?php
+                      endwhile;
+                     else :
+                     ?>
+                     <div class="col-md-12 grid-margin stretch-card ">
+                      <div class="card alert alert-info mt-3">
+                        Belum ada Berita yang diterbitkan.
                       </div>
-                    </div>
                   </div>
-                  <div class="col-md-6 grid-margin stretch-card">
-                    <div class="card">
-                      <div class="card-body">
-                        <h4 class="card-title">
-                          Viral! Praktik Dokter Ilegal!
-                        </h4>
-                        <p class="card-description">Admin, 24 June 2020</p>
-                        <div class="template-demo">
-                          <p>
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Quia placeat, minus fugiat suscipit nemo
-                            repellendus. Harum expedita tempora ducimus,
-                            pariatur dolorem, nostrum dolorum soluta voluptas
-                            dolores odio at debitis temporibus.
-                          </p>
-                        </div>
-                        <hr />
-                        <div class="d-flex justify-content-end">
-                          <a href=""
-                            ><button
-                              class="btn btn-sm btn-warning"
-                              style="margin-right: 10px"
-                            >
-                              Edit
-                            </button></a
-                          >
-                          <a href=""
-                            ><button class="btn btn-sm btn-danger">
-                              Delete
-                            </button></a
-                          >
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                     <?php endif; ?>
                 </div>
               </div>
             </div>
@@ -452,6 +364,7 @@
     <script src="../../js/template.js"></script>
     <script src="../../js/settings.js"></script>
     <script src="../../js/todolist.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script
       src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js"
       referrerpolicy="origin"
@@ -466,6 +379,43 @@
         menubar: false,
       });
     </script>
+    <script>
+      const editButton = (id) => {
+        if(id){
+
+          const judul = $("#judul"+id).html();
+          const isi = $("#isi"+id).html();
+          $("#formBerita").attr('action','/hospital_website/admin/pages/berita/edit.php');
+          $("#judul").val(judul);
+          $("#editor").html(isi);
+          $("#formBerita").append('<input id="editId" name="id" value="' + id + '" hidden />');
+        } else {
+          $("#formBerita").attr('action','/hospital_website/admin/pages/berita/add.php');
+          $("#judul").val('');
+          $("#editor").html('');
+          $("#editId").remove();
+        }
+      }
+      const alertDelete = (id) => {
+        swal({
+              title: "Yakin ingin menghapus berita?",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                $.post("/hospital_website/admin/pages/berita/delete.php",
+                {
+                  id: id,
+                },
+                function(data, status){
+                  location.href = '/hospital_website/admin/pages/berita';
+                });
+              } 
+            });
+      }
+      </script>
     <!-- endinject -->
     <!-- Custom js for this page-->
     <!-- End custom js for this page-->

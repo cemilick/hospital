@@ -1,3 +1,10 @@
+<?php 
+  include '../../database/koneksi.php';
+  session_start();
+  if(!$_SESSION['isLogin']){
+    header('location: /hospital_website/admin/pages/login');
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -51,50 +58,58 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form class="forms-sample">
+            <form id="formDokter" class="forms-sample" action="/hospital_website/admin/pages/dokter/add.php" method="POST">
               <div class="modal-body">
                 <div class="form-group">
                   <label for="exampleInputUsername1">Nama Dokter</label>
                   <input
                     type="text"
                     class="form-control"
-                    id="exampleInputUsername1"
-                    placeholder="Username"
+                    id="nama"
+                    name="nama"
+                    placeholder="Nama Dokter"
                   />
                 </div>
                 <div class="form-group">
                   <label for="exampleInputEmail1">Bidang Pelayanan</label>
                   <input
-                    type="email"
+                    type="text"
                     class="form-control"
-                    id="exampleInputEmail1"
-                    placeholder="Email"
+                    id="pelayanan"
+                    name="pelayanan"
+                    placeholder="Pelayanan 1, Pelayanan 2, dst"
                   />
                 </div>
                 <div class="form-group">
                   <label for="exampleInputPassword1">Jadwal Dokter</label>
                   <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                    <p class="text-sm text-secondary">Tanggal</p>
                       <input
                         type="date"
                         class="form-control"
-                        id="exampleInputPassword1"
+                        id="tanggal"
+                        name="tanggal"
                         placeholder="Date"
                       />
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
+                      <p class="text-sm text-secondary">Waktu Masuk</p>
                       <input
                         type="time"
                         class="form-control"
-                        id="exampleInputPassword1"
+                        id="masuk"
+                        name="masuk"
                         placeholder="Waktu"
                       />
                     </div>
-                    <div class="col-md-3">
+                    <div class="col-md-4">
+                      <p class="text-sm text-secondary">Waktu Pulang</p>
                       <input
                         type="time"
                         class="form-control"
-                        id="exampleInputPassword1"
+                        id="pulang"
+                        name="pulang"
                         placeholder="Waktu"
                       />
                     </div>
@@ -102,7 +117,7 @@
                 </div>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-primary" id="btnForm">
+                <button type="submit" class="btn btn-primary" id="btnForm">
                   Simpan
                 </button>
                 <button
@@ -285,34 +300,42 @@
                         </button>
                       </div>
                     </div>
-                    <div class="table-responsive mt-1">
-                      <table class="table select-table">
-                        <thead>
-                          <tr>
-                            <th>Dokter</th>
-                            <th>Bidang Pelayanan</th>
-                            <th>Jadwal Dokter</th>
-                            <th>Action</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
+                          <?php 
+
+                            $query = "SELECT * FROM `jadwal`";
+
+                            $result = mysqli_query($conn, $query);
+                            if($result->num_rows > 0):
+                            ?>
+                          <div class="table-responsive mt-1">
+                          <table class="table select-table">
+                            <thead>
+                              <tr>
+                                <th>Dokter</th>
+                                <th>Bidang Pelayanan</th>
+                                <th>Jadwal Dokter</th>
+                                <th>Action</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                           <?php while($row = mysqli_fetch_assoc($result)): ?>    
+                            <tr>
                             <td>
-                              <h6 style="margin-top: -15px">
-                                Dr. Dante, Sp. OG.
-                              </h6>
-                              <p>Spesialis Kandungan</p>
+                              <input id="pelayanan<?= $row['id'] ?>" value="<?= $row['pelayanan'] ?>" hidden />
+                              <h6 style="margin-top: -15px" id="nama<?= $row['id'] ?>"><?= $row['nama_dokter']; ?></h6>
                             </td>
                             <td>
                               <div>
                                 <div>
                                   <ol>
+                                    <?php
+                                      $pelayanan = explode(', ', $row['pelayanan']);
+                                      foreach($pelayanan as $pel):
+                                    ?>
                                     <li>
-                                      <p>Konsultasi Kandungan</p>
+                                      <p><?= $pel; ?></p>
                                     </li>
-                                    <li>
-                                      <p>Konsultasi Kebidanan</p>
-                                    </li>
+                                    <?php endforeach; ?>
                                   </ol>
                                 </div>
                               </div>
@@ -320,25 +343,39 @@
                             <td>
                               <ul>
                                 <li>
-                                  <h6>Minggu, 9 Maret 2022</h6>
-                                  <p>16:00 WIB - 18:00 WIB</p>
+                                  <?php $masuk = date_create($row['jadwal_masuk']); ?>
+                                  <?php $pulang = date_create($row['jadwal_pulang']); ?>
+                                  <input id="tanggal<?= $row['id'] ?>" value="<?= date_format($masuk, 'Y-m-d') ?>" hidden>
+                                  <h6><?= date_format($masuk, 'l, d-m-Y') ?></h6>
+                                  <p><span id="masuk<?= $row['id'] ?>"><?= date_format($masuk, 'H:i') ?></span> WIB - <span id="pulang<?= $row['id'] ?>"><?= date_format($pulang, 'H:i') ?></span> WIB</p>
                                 </li>
                               </ul>
                             </td>
                             <td>
-                              <ul>
-                                <li>
-                                  <a href="" class="text-warning">Edit</a>
-                                </li>
-                                <li>
-                                  <a href="" class="text-danger">Hapus</a>
-                                </li>
-                              </ul>
+                                <div class="mb-2">
+                                  <button 
+                                  onclick="editButton(<?= $row['id']; ?>)"
+                                  data-toggle="modal"
+                                  data-target="#exampleModal"
+                                  class="btn btn-sm btn-warning">Edit</button>
+                                </div>
+                                <div>
+                                  <button 
+                                  onclick="alertDelete(<?= $row['id'] ?>)"
+                                  class="btn btn-sm btn-danger">Hapus</button>
+                                </div>
                             </td>
                           </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                                <?php endwhile; ?>
+                              </tbody>
+                            </table>
+                            </div>
+                                <?php else : ?>
+                                  <div class="col-md-12 grid-margin stretch-card ">
+                      <div class="card alert alert-info mt-3">
+                        Belum ada Jadwal Dokter yang ditambahkan.
+                      </div>
+                          <?php endif; ?>
                   </div>
                 </div>
               </div>
@@ -393,12 +430,60 @@
     <script src="../../vendors/bootstrap-datepicker/bootstrap-datepicker.min.js"></script>
     <!-- End plugin js for this page -->
     <!-- inject:js -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="../../js/off-canvas.js"></script>
     <script src="../../js/hoverable-collapse.js"></script>
     <script src="../../js/template.js"></script>
     <script src="../../js/settings.js"></script>
     <script src="../../js/todolist.js"></script>
-    <script></script>
+    <script>
+      const editButton = (id) => {
+        if(id){
+          const nama = $("#nama"+id).html();
+          const pelayanan = $("#pelayanan"+id).val();
+          const tanggal = $("#tanggal"+id).val();
+          const masuk = $("#masuk"+id).html();
+          const pulang = $("#pulang"+id).html();
+
+          $("#formDokter").attr('action','/hospital_website/admin/pages/dokter/edit.php');
+          $("#nama").val(nama);
+          $("#pelayanan").val(pelayanan);
+          $("#tanggal").val(tanggal);
+          $("#masuk").val(masuk);
+          $("#pulang").val(pulang);
+          $("#formDokter").append('<input id="editId" name="id" value="' + id + '" hidden />');
+        } else {
+          $("#formDokter").attr('action','/hospital_website/admin/pages/dokter/add.php');
+          $("#nama").val('');
+          $("#pelayanan").val('');
+          $("#tanggal").val('');
+          $("#masuk").val('');
+          $("#pulang").val('');
+          $("#editId").remove();
+        }
+      }
+      
+      const alertDelete = (id) => {
+        swal({
+              title: "Hapus Jadwal Dokter",
+              text: "Yakin ingin menghapus jadwal dokter?",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+            })
+            .then((willDelete) => {
+              if (willDelete) {
+                $.post("/hospital_website/admin/pages/dokter/delete.php",
+                {
+                  id: id,
+                },
+                function(data, status){
+                  location.href = '/hospital_website/admin/pages/dokter';
+                });
+              } 
+            });
+      }
+    </script>
     <!-- endinject -->
     <!-- Custom js for this page-->
     <!-- End custom js for this page-->

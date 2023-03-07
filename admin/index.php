@@ -1,3 +1,10 @@
+<?php 
+  include './database/koneksi.php';
+  session_start();
+  if(!$_SESSION['isLogin']){
+    header('location: /hospital_website/admin/pages/login');
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -103,7 +110,8 @@
                   </p>
                 </div>
                 <a class="dropdown-item"
-                  ><i
+                href="/hospital_website/admin/pages/login/logout.php"  
+                ><i
                     class="dropdown-item-icon mdi mdi-power text-primary me-2"
                   ></i
                   >Sign Out</a
@@ -162,7 +170,7 @@
               <div class="collapse" id="auth">
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item">
-                    <a class="nav-link" href="pages/samples/login.html">
+                    <a class="nav-link" href="/hospital_website/admin/pages/login/logout.php">
                       Logout
                     </a>
                   </li>
@@ -205,49 +213,68 @@
                                       </p>
                                     </div>
                                   </div>
-                                  <div class="table-responsive mt-1">
-                                    <table class="table select-table">
-                                      <thead>
-                                        <tr>
-                                          <th>Dokter</th>
-                                          <th>Bidang Pelayanan</th>
-                                          <th>Jadwal Dokter</th>
-                                        </tr>
-                                      </thead>
-                                      <tbody>
-                                        <tr>
-                                          <td>
-                                            <h6 style="margin-top: -15px">
-                                              Dr. Dante, Sp. OG.
-                                            </h6>
-                                            <p>Spesialis Kandungan</p>
-                                          </td>
-                                          <td>
-                                            <div>
-                                              <div>
-                                                <ol>
-                                                  <li>
-                                                    <p>Konsultasi Kandungan</p>
-                                                  </li>
-                                                  <li>
-                                                    <p>Konsultasi Kebidanan</p>
-                                                  </li>
-                                                </ol>
-                                              </div>
-                                            </div>
-                                          </td>
-                                          <td>
-                                            <ul>
-                                              <li>
-                                                <h6>Minggu, 9 Maret 2022</h6>
-                                                <p>16:00 WIB - 18:00 WIB</p>
-                                              </li>
-                                            </ul>
-                                          </td>
-                                        </tr>
-                                      </tbody>
-                                    </table>
+                                      <?php 
+
+                                    $query = "SELECT * FROM `jadwal`";
+
+                                    $result = mysqli_query($conn, $query);
+                                    if($result->num_rows > 0):
+                                    ?>
+                          <div class="table-responsive mt-1">
+                          <table class="table select-table">
+                            <thead>
+                              <tr>
+                                <th>Dokter</th>
+                                <th>Bidang Pelayanan</th>
+                                <th>Jadwal Dokter</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                           <?php while($row = mysqli_fetch_assoc($result)): ?>    
+                            <tr>
+                            <td>
+                              <input id="pelayanan<?= $row['id'] ?>" value="<?= $row['pelayanan'] ?>" hidden />
+                              <h6 style="margin-top: -15px" id="nama<?= $row['id'] ?>"><?= $row['nama_dokter']; ?></h6>
+                            </td>
+                            <td>
+                              <div>
+                                <div>
+                                  <ol>
+                                    <?php
+                                      $pelayanan = explode(', ', $row['pelayanan']);
+                                      foreach($pelayanan as $pel):
+                                    ?>
+                                    <li>
+                                      <p><?= $pel; ?></p>
+                                    </li>
+                                    <?php endforeach; ?>
+                                  </ol>
+                                </div>
+                              </div>
+                            </td>
+                            <td>
+                              <ul>
+                                <li>
+                                  <?php $masuk = date_create($row['jadwal_masuk']); ?>
+                                  <?php $pulang = date_create($row['jadwal_pulang']); ?>
+                                  <input id="tanggal<?= $row['id'] ?>" value="<?= date_format($masuk, 'Y-m-d') ?>" hidden>
+                                  <h6><?= date_format($masuk, 'l, d-m-Y') ?></h6>
+                                  <p><span id="masuk<?= $row['id'] ?>"><?= date_format($masuk, 'H:i') ?></span> WIB - <span id="pulang<?= $row['id'] ?>"><?= date_format($pulang, 'H:i') ?></span> WIB</p>
+                                </li>
+                              </ul>
+                            </td>
+                          </tr>
+                                <?php endwhile; ?>
+                              </tbody>
+                            </table>
+                            </div>
+                                <?php else : ?>
+                                  <div class="col-md-12 grid-margin stretch-card ">
+                                  <div class="card alert alert-info mt-3">
+                                    Belum ada Jadwal Dokter yang ditambahkan.
                                   </div>
+                                </div>
+                          <?php endif; ?>
                                 </div>
                               </div>
                             </div>
@@ -269,34 +296,46 @@
                                       </div>
                                       <div class="list-wrapper">
                                         <ul class="todo-list todo-list-rounded">
-                                          <li class="d-block">
-                                            <div class="form-check w-100">
-                                              <label class="form-check-label">
-                                                <p
-                                                  style="
-                                                    font-weight: bold;
-                                                    font-size: 14px;
-                                                  "
-                                                >
-                                                  Viral! Dokter Melakukan
-                                                  Praktik Ilegal!
-                                                </p>
-                                                Lorem Ipsum is simply dummy text
-                                                of the printing
-                                                <i
-                                                  class="input-helper rounded"
-                                                ></i>
-                                              </label>
-                                              <div class="d-flex mt-2">
-                                                <div
-                                                  class="ps-4 text-small me-3"
-                                                  style="font-style: italic"
-                                                >
-                                                  Admin, 24 June 2020
-                                                </div>
-                                              </div>
-                                            </div>
-                                          </li>
+                                        <?php 
+                    $query = "SELECT * FROM `berita`";
+                    $result = mysqli_query($conn, $query);
+
+                    if(mysqli_num_rows($result) > 0):
+                      while($row = mysqli_fetch_assoc($result)):
+                        ?>
+                      <li class="d-block">
+                      <div class="form-check w-100">
+                        <label class="form-check-label">
+                          <p
+                            style="
+                              font-weight: bold;
+                              font-size: 14px;
+                            "
+                          >
+                            <?= strtoupper($row['judul']) ?>
+                          </p>
+                          <?= $row['isi'] ?>
+                        </label>
+                        <div class="d-flex mt-2">
+                          <div
+                            class="ps-4 text-small me-3"
+                            style="font-style: italic"
+                          >
+                            Admin, <?= date_format(date_create($row['created_at']), 'd M Y') ?>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                        <?php endwhile;
+                        else :
+                        ?>
+                        <li class="d-block">
+                          <div class="col-md-12 alert alert-info">
+                            Belum ada Berita terkini.
+                          </div>
+                        </li>
+                        <?php endif; ?>
+                                          
                                         </ul>
                                       </div>
                                     </div>
