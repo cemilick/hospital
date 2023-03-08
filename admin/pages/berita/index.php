@@ -37,7 +37,7 @@
     <!-- inject:css -->
     <link rel="stylesheet" href="../../css/vertical-layout-light/style.css" />
     <!-- endinject -->
-    <link rel="shortcut icon" href="../../images/favicon.png" />
+    <link rel="shortcut icon" href="../../images/logoRS.png" />
   </head>
 
   <body>
@@ -115,11 +115,12 @@
             </button>
           </div>
           <div>
-            <a class="navbar-brand brand-logo" href="../../index.html">
-              <img src="../../images/logo.svg" alt="logo" />
+            <a class="navbar-brand brand-logo" href="/hospital_website/admin/">
+              <img src="../../images/logoRS.png" alt="logo" />
+              <font size="2">RS Brayat Minulya</font>
             </a>
-            <a class="navbar-brand brand-logo-mini" href="../../index.html">
-              <img src="../../images/logo-mini.svg" alt="logo" />
+            <a class="navbar-brand brand-logo-mini" href="/hospital_website/admin/">
+              <img src="../../images/logoRS.png" alt="logo" />
             </a>
           </div>
         </div>
