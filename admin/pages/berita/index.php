@@ -169,7 +169,8 @@
                   </p>
                 </div>
                 <a class="dropdown-item"
-                  ><i
+                href="/hospital_website/admin/pages/login/logout.php"  
+                ><i
                     class="dropdown-item-icon mdi mdi-power text-primary me-2"
                   ></i
                   >Sign Out</a
@@ -228,7 +229,7 @@
               <div class="collapse" id="auth">
                 <ul class="nav flex-column sub-menu">
                   <li class="nav-item">
-                    <a class="nav-link" href="pages/samples/login.html">
+                  <a class="nav-link" href="/hospital_website/admin/pages/login/logout.php">
                       Logout
                     </a>
                   </li>
