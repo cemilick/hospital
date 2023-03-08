@@ -370,7 +370,7 @@
                     <a href="#"> <i class="fas fa-user"></i> by admin </a>
                 </div>
                 <h3><?= $row['judul'] ?></h3>
-                <p><?= $row['isi'] ?></p>
+                <p><?= substr($row['isi'], 0, 150) ?> ...</p>
                 <a href="#" class="btn"> learn more <span class="fas fa-chevron-right"></span> </a>
             </div>
         </div>
