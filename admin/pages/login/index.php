@@ -19,7 +19,7 @@
   <!-- inject:css -->
   <link rel="stylesheet" href="../../css/vertical-layout-light/style.css">
   <!-- endinject -->
-  <link rel="shortcut icon" href="../../images/favicon.png" />
+  <link rel="shortcut icon" href="../../images/logoRS.png" />
 </head>
 
 <body>
@@ -44,9 +44,10 @@
           ?>
             <div class="auth-form-light text-left py-5 px-4 px-sm-5">
               <div class="brand-logo">
-                <img src="../../images/logo.svg" alt="logo">
+                <img src="../../images/logoRS.png" alt="logo">
               </div>
-              <h4>Halaman Login Admin RS Brayat Minulya</h4>
+              <h2>Halaman Login</h2>
+              <h4>Admin RS Brayat Minulya</h4>
               <h6 class="fw-light">Silahkan Login untuk masuk ke halaman Admin</h6>
               <form class="pt-3" action="/hospital_website/admin/pages/login/login.php" method="POST">
                 <div class="form-group">
@@ -57,6 +58,35 @@
                 </div>
                 <div class="mt-3">
                   <button class="btn btn-block btn-primary btn-lg font-weight-medium auth-form-btn" type="submit">LOG IN</button>
+                  <style>
+.auth-form-light {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.auth-form-light h2 {
+  text-align: center;
+  color: #007bff;
+}
+
+.auth-form-light h4 {
+  text-align: center;
+  color: #00000;
+}
+
+.auth-form-light .form-group {
+  width: 100%;
+}
+
+.auth-form-light .auth-form-btn {
+  width: 100%;
+}
+</style>
+
                 </div>
               </form>
             </div>
