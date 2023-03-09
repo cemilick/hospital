@@ -230,7 +230,11 @@
             while($row = mysqli_fetch_assoc($result)):
         ?>
         <div class="box">
-            <img src="image/doc-1.jpg" alt="">
+            <?php 
+                $imgBerita = explode("/", $row['picture'])[4];
+                $imgBerita = "admin/images/dokter/" . $imgBerita; 
+            ?>
+            <img src="<?= $imgBerita ?>" alt="">
             <h3><?= $row['nama_dokter'] ?></h3>
             <span><?= $row['pelayanan'] ?></span>
             <?php $masuk = date_create($row['jadwal_masuk']); ?>
@@ -362,7 +366,11 @@
         ?>
         <div class="box">
             <div class="image">
-                <img src="image/blog-1.jpg" alt="">
+                <?php 
+                    $imgBerita = explode("/", $row['picture'])[4];
+                    $imgBerita = "admin/images/berita/" . $imgBerita; 
+                ?>
+                <img src="<?= $imgBerita ?>" alt="">
             </div>
             <div class="content">
                 <div class="icon">
