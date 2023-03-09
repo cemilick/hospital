@@ -1,6 +1,6 @@
 <?php
     require '../../database/koneksi.php';
-
+    $dir = "../../images/";
     $namaDokter = $_POST['nama'];
     $pelayanan = $_POST['pelayanan'];
     $tanggal = $_POST['tanggal'];
@@ -8,8 +8,14 @@
     $pulang = $_POST['pulang'];
     $masuk = $tanggal . " " . $masuk;
     $pulang = $tanggal . " " . $pulang;
-
-    $query = "INSERT INTO `jadwal` (`id`, `nama_dokter`, `pelayanan`, `jadwal_masuk`, `jadwal_pulang`) VALUES ('','" . $namaDokter . "','" . $pelayanan . "','" . $masuk . "','" . $pulang . "')";
+    if(isset($_FILES['picture']) && !($_FILES['picture']['name'] == "")){
+        $picture = $_FILES['picture'];
+        $pictureName = strtolower($dir . "dokter/" . strval(time()) . "_" . $picture['name']);
+        move_uploaded_file($picture["tmp_name"], $pictureName);
+        $query = "INSERT INTO `jadwal` (`id`, `nama_dokter`, `pelayanan`, `jadwal_masuk`, `jadwal_pulang`,`picture`) VALUES ('','" . $namaDokter . "','" . $pelayanan . "','" . $masuk . "','" . $pulang . "','" . $pictureName . "')";
+    } else {
+        $query = "INSERT INTO `jadwal` (`id`, `nama_dokter`, `pelayanan`, `jadwal_masuk`, `jadwal_pulang`,`picture`) VALUES ('','" . $namaDokter . "','" . $pelayanan . "','" . $masuk . "','" . $pulang . "','')";
+    }
 
     $result = mysqli_query($conn, $query);
 

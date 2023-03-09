@@ -58,8 +58,20 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form id="formDokter" class="forms-sample" action="/hospital_website/admin/pages/dokter/add.php" method="POST">
+            <form id="formDokter" class="forms-sample" action="/hospital_website/admin/pages/dokter/add.php" method="POST" enctype="multipart/form-data">
               <div class="modal-body">
+                <div class="form-group">
+                <div class="mb-4 d-flex justify-content-center">
+                    <img src="https://mdbootstrap.com/img/Photos/Others/placeholder.jpg"
+                    alt="example placeholder" style="width: 100px;" id="picture"/>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="btn btn-primary btn-rounded">
+                        <label class="form-label text-white m-1" for="customFile1">Choose file</label>
+                        <input accept="image/x-png,image/jpeg,image/jpg" type="file" class="form-control d-none" id="customFile1" onchange="inputPicture()" name="picture"/>
+                    </div>
+                </div>
+                </div>
                 <div class="form-group">
                   <label for="exampleInputUsername1">Nama Dokter</label>
                   <input
@@ -68,6 +80,7 @@
                     id="nama"
                     name="nama"
                     placeholder="Nama Dokter"
+                    required
                   />
                 </div>
                 <div class="form-group">
@@ -78,6 +91,7 @@
                     id="pelayanan"
                     name="pelayanan"
                     placeholder="Pelayanan 1, Pelayanan 2, dst"
+                    required
                   />
                 </div>
                 <div class="form-group">
@@ -91,6 +105,7 @@
                         id="tanggal"
                         name="tanggal"
                         placeholder="Date"
+                        required
                       />
                     </div>
                     <div class="col-md-4">
@@ -101,6 +116,7 @@
                         id="masuk"
                         name="masuk"
                         placeholder="Waktu"
+                        required
                       />
                     </div>
                     <div class="col-md-4">
@@ -111,6 +127,7 @@
                         id="pulang"
                         name="pulang"
                         placeholder="Waktu"
+                        required
                       />
                     </div>
                   </div>
@@ -323,8 +340,13 @@
                            <?php while($row = mysqli_fetch_assoc($result)): ?>    
                             <tr>
                             <td>
-                              <input id="pelayanan<?= $row['id'] ?>" value="<?= $row['pelayanan'] ?>" hidden />
-                              <h6 style="margin-top: -15px" id="nama<?= $row['id'] ?>"><?= $row['nama_dokter']; ?></h6>
+                              <div class="d-flex justify-content-space-between align-items-center">
+
+                                <input id="pelayanan<?= $row['id'] ?>" value="<?= $row['pelayanan'] ?>" hidden />
+                                <input id="oldpict<?= $row['id'] ?>" value="<?= $row['picture'] ?>" hidden />
+                                <img id="picture<?= $row['id'] ?>" src="<?php if($row['picture'] != '') echo $row['picture']; else echo '../../images/logoRS.png';  ?>" style="width: 30px; height: 30px"/>
+                                <h6 id="nama<?= $row['id'] ?>"><?= $row['nama_dokter']; ?></h6>
+                              </div>
                             </td>
                             <td>
                               <div>
@@ -386,7 +408,6 @@
           <!-- content-wrapper ends -->
           <!-- partial -->
           <!-- partial:../../partials/_footer.html -->
-        </div>
         <footer class="footer">
             <div
               class="d-sm-flex justify-content-center justify-content-sm-between"
@@ -439,16 +460,20 @@
           const nama = $("#nama"+id).html();
           const pelayanan = $("#pelayanan"+id).val();
           const tanggal = $("#tanggal"+id).val();
+          const oldpict = $("#oldpict"+id).val();
           const masuk = $("#masuk"+id).html();
           const pulang = $("#pulang"+id).html();
-
+          const picture = $("#picture"+id).attr('src');
+          console.log(picture);
           $("#formDokter").attr('action','/hospital_website/admin/pages/dokter/edit.php');
           $("#nama").val(nama);
           $("#pelayanan").val(pelayanan);
           $("#tanggal").val(tanggal);
           $("#masuk").val(masuk);
           $("#pulang").val(pulang);
+          $("#picture").attr('src', picture);
           $("#formDokter").append('<input id="editId" name="id" value="' + id + '" hidden />');
+          $("#formDokter").append('<input id="oldpict" name="oldpict" value="' + oldpict + '" hidden />');
         } else {
           $("#formDokter").attr('action','/hospital_website/admin/pages/dokter/add.php');
           $("#nama").val('');
@@ -457,6 +482,7 @@
           $("#masuk").val('');
           $("#pulang").val('');
           $("#editId").remove();
+          $("#oldpict").remove();
         }
       }
       
@@ -479,6 +505,22 @@
                 });
               } 
             });
+      }
+
+      const inputPicture = () => {
+        const inputImage = $("#customFile1").prop('files')[0];
+        if(inputImage.type == "image/png" || inputImage.type == "image/jpg"|| inputImage.type == "image/jpeg"){
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            $('#picture')
+            .attr('src', e.target.result)
+            .width(150)
+            .height(200);
+          };
+          reader.readAsDataURL(inputImage);
+        } else {
+          $("#customFile1").val('');
+        }
       }
     </script>
     <!-- endinject -->

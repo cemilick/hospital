@@ -58,20 +58,32 @@
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
-            <form id="formBerita" class="forms-sample" action="/hospital_website/admin/pages/berita/add.php" method="POST">
+            <form id="formBerita" class="forms-sample" action="/hospital_website/admin/pages/berita/add.php" method="POST" enctype="multipart/form-data">
               <div class="modal-body">
+              <div class="form-group">
+                <div class="mb-4 d-flex justify-content-center">
+                    <img src="https://mdbootstrap.com/img/Photos/Others/placeholder.jpg"
+                    alt="example placeholder" style="width: 100%;" id="picture"/>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <div class="btn btn-primary btn-rounded">
+                        <label class="form-label text-white m-1" for="customFile1">Choose file</label>
+                        <input accept="image/x-png,image/jpeg,image/jpg" type="file" class="form-control d-none" id="customFile1" onchange="inputPicture()" name="picture"/>
+                    </div>
+                </div>
+                </div>
                 <div class="form-group">
-                  <label for="exampleInputUsername1">Judul Artikel</label>
+                  <label for="exampleInputUsername1">Judul Berita/Artikel</label>
                   <input
                     type="text"
                     class="form-control"
                     id="judul"
-                    placeholder="Username"
+                    placeholder="Judul Berita"
                     name="judul"
                   />
                 </div>
                 <div class="form-group">
-                  <label for="exampleInputEmail1">Isi Artikel</label>
+                  <label for="exampleInputEmail1">Isi Berita/Artikel</label>
                   <textarea
                     name="isi"
                     id="editor"
@@ -275,10 +287,16 @@
                         <div class="col-md-6 grid-margin stretch-card">
                       <div class="card">
                         <div class="card-body">
+                          <div class="mb-4 d-flex justify-content-center">
+                          <input id="oldpict<?= $row['id'] ?>" value="<?= $row['picture'] ?>" hidden />
+                              <img src="<?php if($row['picture']) echo $row['picture']; else echo 'https://mdbootstrap.com/img/Photos/Others/placeholder.jpg'; ?>"
+                              alt="example placeholder" style="width: 100%;" id="picture<?= $row['id'] ?>"/>
+                          </div>
                           <h4 class="card-title" id="judul<?= $row['id'] ?>"><?= $row['judul']; ?></h4>
                           <p class="card-description">Admin, <?= $row['created_at'];  ?></p>
                           <div class="template-demo">
-                            <p id="isi<?= $row['id'] ?>"><?= $row['isi']; ?></p>
+                            <input type="text" value="<?= $row['isi'] ?>" hidden id="isi<?= $row['id'] ?>"/>
+                            <p><?= substr($row['isi'], 0, 150) ?> ...</p>
                           </div>
                           <hr />
                           <div class="d-flex justify-content-end">
@@ -379,18 +397,22 @@
     <script>
       const editButton = (id) => {
         if(id){
-
           const judul = $("#judul"+id).html();
-          const isi = $("#isi"+id).html();
+          const isi = $("#isi"+id).val();
+          const picture = $("#picture"+id).attr('src');
+          const oldpict = $("#oldpict"+id).val();
           $("#formBerita").attr('action','/hospital_website/admin/pages/berita/edit.php');
           $("#judul").val(judul);
           $("#editor").html(isi);
+          $("#picture").attr('src', picture);
           $("#formBerita").append('<input id="editId" name="id" value="' + id + '" hidden />');
+          $("#formBerita").append('<input id="oldpict" name="oldpict" value="' + oldpict + '" hidden />');
         } else {
           $("#formBerita").attr('action','/hospital_website/admin/pages/berita/add.php');
           $("#judul").val('');
           $("#editor").html('');
           $("#editId").remove();
+          $("#oldpict").remove();
         }
       }
       const alertDelete = (id) => {
@@ -411,6 +433,21 @@
                 });
               } 
             });
+      }
+
+      const inputPicture = () => {
+        const inputImage = $("#customFile1").prop('files')[0];
+        if(inputImage.type == "image/png" || inputImage.type == "image/jpg"|| inputImage.type == "image/jpeg"){
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            $('#picture')
+            .attr('src', e.target.result)
+            .width('100%');
+          };
+          reader.readAsDataURL(inputImage);
+        } else {
+          $("#customFile1").val('');
+        }
       }
       </script>
     <!-- endinject -->
